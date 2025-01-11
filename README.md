@@ -25,5 +25,6 @@ Ce projet est un gestionnaire de parfums. Il permet de gérer les parfums, les l
 * PHP 8
 * MySQL
 * TailwindCSS
+* ChartJS
 * Vite
 
