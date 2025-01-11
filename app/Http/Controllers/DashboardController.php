@@ -2,78 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Laboratoire;
 use App\Models\Parfum;
 use App\Models\Produit;
+use App\Models\Composition;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // Récupérer les données nécessaires pour le tableau de bord
-        $totalLaboratoires = Laboratoire::count();
+        // Statistiques de base
         $totalParfums = Parfum::count();
-        $lastParfum = Parfum::latest()->first(); // Dernier parfum créé
-        $productWithMaxStock = Produit::orderByDesc('QteStock')->first(); // Produit avec le plus grand stock
+        $totalLaboratoires = Laboratoire::count();
+        $totalProduits = Produit::count();
 
-        // Retourner la vue avec les données
-        return view('dashboard.DashBoardParfumerie', compact(
-            'totalLaboratoires',
+        // Nombre de parfums par laboratoire
+        $parfumsParLabo = Laboratoire::select('DesignationLabo as laboratoire')
+            ->withCount('parfums as count')
+            ->orderBy('count', 'desc')
+            ->get();
+
+        // Produits les plus utilisés dans les compositions
+        $produitsUtilises = DB::table('compositions')
+            ->join('produits', 'compositions.CodPro', '=', 'produits.CodPro')
+            ->select('produits.DesignationPro as produit', DB::raw('COUNT(*) as utilisations'))
+            ->groupBy('produits.CodPro', 'produits.DesignationPro')
+            ->orderBy('utilisations', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('dashboard', compact(
             'totalParfums',
-            'lastParfum',
-            'productWithMaxStock'
+            'totalLaboratoires',
+            'totalProduits',
+            'parfumsParLabo',
+            'produitsUtilises'
         ));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

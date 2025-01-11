@@ -3,9 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-
-use App\Models\Produit;
-use App\Models\Parfum;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Composition>
@@ -20,13 +18,9 @@ class CompositionFactory extends Factory
     public function definition(): array
     {
         return [
-
-            'parfum_id' => Parfum::factory(),
-
-            'produit_id' => Produit::factory(),
-
-            'QuantiteUtilisee' => $this->faker->numberBetween(1, 100),
-
+            'CodPar' => \App\Models\Parfum::factory(),
+            'CodPro' => \App\Models\Produit::factory(),
+            'QuantiteUtilisee' => fake()->randomFloat(2, 1, 100)
         ];
     }
 }

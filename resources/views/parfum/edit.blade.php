@@ -3,7 +3,7 @@
 @section('content')
 <div class="py-6">
     <header class="mb-6">
-        <h2 class="text-3xl font-bold text-gray-900">Créer un nouveau parfum</h2>
+        <h2 class="text-3xl font-bold text-gray-900">Modifier le parfum : {{ $parfum->NomPar }}</h2>
     </header>
 
     @if($errors->any())
@@ -30,57 +30,51 @@
 
     <div class="bg-white shadow sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
-            <form action="{{ route('parfums.store') }}" method="POST">
+            <form action="{{ route('parfums.update', $parfum) }}" method="POST">
                 @csrf
+                @method('PUT')
+                
                 <div class="space-y-6">
                     <div>
                         <label for="NomPar" class="block text-sm font-medium text-gray-700">Nom du parfum</label>
                         <div class="mt-1">
-                            <input type="text" name="NomPar" id="NomPar" value="{{ old('NomPar') }}"
-                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg p-3 border-gray-300 rounded-md @error('NomPar') is-invalid @enderror"
+                            <input type="text" name="NomPar" id="NomPar" 
+                                   value="{{ old('NomPar', $parfum->NomPar) }}"
+                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                    required>
-                            @error('NomPar')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
 
                     <div>
                         <label for="PrixVente" class="block text-sm font-medium text-gray-700">Prix de vente</label>
                         <div class="mt-1 relative rounded-md shadow-sm">
-                            <input type="number" name="PrixVente" id="PrixVente" value="{{ old('PrixVente') }}"
-                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg p-3 border-gray-300 rounded-md @error('PrixVente') is-invalid @enderror"
+                            <input type="number" name="PrixVente" id="PrixVente" 
+                                   value="{{ old('PrixVente', $parfum->PrixVente) }}"
+                                   class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
                                    step="0.01" min="0" required>
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                 <span class="text-gray-500 sm:text-sm">€</span>
                             </div>
-                            @error('PrixVente')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
 
                     <div>
                         <label for="DateProduction" class="block text-sm font-medium text-gray-700">Date de production</label>
                         <div class="mt-1">
-                            <input type="date" name="DateProduction" id="DateProduction" value="{{ old('DateProduction', date('Y-m-d')) }}"
-                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg p-3 border-gray-300 rounded-md @error('DateProduction') is-invalid @enderror"
+                            <input type="date" name="DateProduction" id="DateProduction" 
+                                   value="{{ old('DateProduction', $parfum->DateProduction->format('Y-m-d')) }}"
+                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                    required>
-                            @error('DateProduction')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
 
                     <div>
                         <label for="DateSortie" class="block text-sm font-medium text-gray-700">Date de sortie prévue</label>
                         <div class="mt-1">
-                            <input type="date" name="DateSortie" id="DateSortie" value="{{ old('DateSortie', date('Y-m-d', strtotime('+1 month'))) }}"
-                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg p-3 border-gray-300 rounded-md @error('DateSortie') is-invalid @enderror"
+                            <input type="date" name="DateSortie" id="DateSortie" 
+                                   value="{{ old('DateSortie', $parfum->DateSortie->format('Y-m-d')) }}"
+                                   class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                    required>
-                            @error('DateSortie')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
 
@@ -88,18 +82,16 @@
                         <label for="NumLabo" class="block text-sm font-medium text-gray-700">Laboratoire</label>
                         <div class="mt-1">
                             <select name="NumLabo" id="NumLabo"
-                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg p-3 border-gray-300 rounded-md @error('NumLabo') is-invalid @enderror"
+                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                     required>
                                 <option value="">Sélectionnez un laboratoire</option>
                                 @foreach($laboratoires as $laboratoire)
-                                    <option value="{{ $laboratoire->NumLabo }}" {{ old('NumLabo') == $laboratoire->NumLabo ? 'selected' : '' }}>
+                                    <option value="{{ $laboratoire->NumLabo }}" 
+                                            {{ (old('NumLabo', $parfum->NumLabo) == $laboratoire->NumLabo) ? 'selected' : '' }}>
                                         {{ $laboratoire->DesignationLabo }} ({{ $laboratoire->ville }})
                                     </option>
                                 @endforeach
                             </select>
-                            @error('NumLabo')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
                 </div>
@@ -111,7 +103,7 @@
                     </a>
                     <button type="submit"
                             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Créer le parfum
+                        Mettre à jour le parfum
                     </button>
                 </div>
             </form>

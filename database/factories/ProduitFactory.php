@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Produit>
@@ -17,13 +18,9 @@ class ProduitFactory extends Factory
     public function definition(): array
     {
         return [
-
-            'DesignationPro' => $this->faker->word,
-
-            'UniteMesurePro' => $this->faker->word,
-
-            'QteStock' => $this->faker->numberBetween(0, 1000),
-
+            'DesignationPro' => fake()->word(),
+            'UniteMesurePro' => fake()->randomElement(['ml', 'g']),
+            'QteStock' => fake()->randomFloat(2, 100, 1000)
         ];
     }
 }

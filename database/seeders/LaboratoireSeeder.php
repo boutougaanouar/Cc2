@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Laboratoire;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Laboratoire;
 
 class LaboratoireSeeder extends Seeder
 {
@@ -13,6 +13,13 @@ class LaboratoireSeeder extends Seeder
      */
     public function run(): void
     {
-        Laboratoire::factory()->count(5)->create();
+        $villes = ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Toulouse'];
+        
+        foreach ($villes as $ville) {
+            Laboratoire::create([
+                'DesignationLabo' => 'Laboratoire ' . fake()->company(),
+                'ville' => $ville
+            ]);
+        }
     }
 }

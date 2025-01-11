@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Laboratoire>
@@ -17,11 +18,8 @@ class LaboratoireFactory extends Factory
     public function definition(): array
     {
         return [
-
-            'DesignationLabo' => $this->faker->company,
-
-            'ville' => $this->faker->city,
-
+            'DesignationLabo' => fake()->company(),
+            'ville' => fake()->city()
         ];
     }
 }

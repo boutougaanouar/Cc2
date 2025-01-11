@@ -1,63 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Produit</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+@section('content')
+<div class="py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center">
+            <h2 class="text-3xl font-bold text-gray-900">Liste des Parfums</h2>
+            <a href="{{ route('parfums.create') }}" 
+               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Nouveau Parfum
+            </a>
+        </div>
 
-<body>
-
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6">Liste des Parfums</h1>
-        <a href="{{ route('parfum.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-6 inline-block">Ajouter un nouveau parfum</a>
-
-        @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
-                <span class="block sm:inline">{{ session('success') }}</span>
+        @if(session('success'))
+            <div class="rounded-md bg-green-50 p-4 mt-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                    </div>
+                </div>
             </div>
         @endif
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-200">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b">#</th>
-                        <th class="py-2 px-4 border-b">Nom</th>
-                        <th class="py-2 px-4 border-b">Prix de vente</th>
-                        <th class="py-2 px-4 border-b">Date de production</th>
-                        <th class="py-2 px-4 border-b">Laboratoire</th>
-                        <th class="py-2 px-4 border-b">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($parfums as $parfum)
-                        <tr class="hover:bg-gray-100">
-                            <td class="py-2 px-4 border-b">{{ $parfum->id }}</td>
-                            <td class="py-2 px-4 border-b">{{ $parfum->NomPar }}</td>
-                            <td class="py-2 px-4 border-b">{{ $parfum->PrixVente }}</td>
-                            <td class="py-2 px-4 border-b">{{ $parfum->DateProduction }}</td>
-                            <td class="py-2 px-4 border-b">{{ $parfum->laboratoire->DesignationLabo }}</td>
-                            <td class="py-2 px-4 border-b">
-                                <a href="{{ route('parfum.detailsProduit', $parfum->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2">Détails Produit</a>
-                                <a href="{{ route('parfum.edit', $parfum->id) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded mr-2">Modifier</a>
-                                <form action="{{ route('parfum.destroy', $parfum->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce parfum ?')">Supprimer</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="mt-8 flex flex-col">
+            <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Nom</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Prix</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Production</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Sortie</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Laboratoire</th>
+                                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                        <span class="sr-only">Actions</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                @foreach($parfums as $parfum)
+                                    <tr>
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                            {{ $parfum->NomPar }}
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            {{ number_format($parfum->PrixVente, 2) }} €
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            {{ $parfum->DateProduction->format('d/m/Y') }}
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            {{ $parfum->DateSortie->format('d/m/Y') }}
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            {{ $parfum->laboratoire->DesignationLabo }}
+                                        </td>
+                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                            <div class="flex justify-end space-x-2">
+                                                <a href="{{ route('parfums.edit', $parfum) }}" 
+                                                   class="text-indigo-600 hover:text-indigo-900">
+                                                    Modifier
+                                                </a>
+                                                <form action="{{ route('parfums.destroy', $parfum) }}" method="POST" 
+                                                      class="inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce parfum ?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                                        Supprimer
+                                                    </button>
+                                                </form>
+                                                <a href="{{ route('parfums.details-produits', $parfum) }}" 
+                                                   class="text-gray-600 hover:text-gray-900">
+                                                    Voir les produits
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-
-</body>
-
-</html>
+</div>
+@endsection

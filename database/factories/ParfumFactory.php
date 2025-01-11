@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Laboratoire;
-
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Parfum>
@@ -19,17 +17,11 @@ class ParfumFactory extends Factory
     public function definition(): array
     {
         return [
-
-            'NomPar' => $this->faker->word,
-
-            'PrixVente' => $this->faker->randomFloat(2, 10, 100),
-
-            'DateProduction' => $this->faker->date,
-
-            'DateSortie' => $this->faker->date,
-
-            'laboratoire_id' => Laboratoire::factory(),
-
+            'NomPar' => fake()->word(),
+            'PrixVente' => fake()->randomFloat(2, 50, 500),
+            'DateProduction' => fake()->dateTimeBetween('-1 year', 'now'),
+            'DateSortie' => fake()->dateTimeBetween('now', '+6 months'),
+            'NumLabo' => Laboratoire::factory(),
         ];
     }
 }

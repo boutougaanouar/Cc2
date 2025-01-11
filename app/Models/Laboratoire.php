@@ -8,14 +8,17 @@ use App\Models\Parfum;
 
 class Laboratoire extends Model
 {
-    /** @use HasFactory<\Database\Factories\LaboratoireFactory> */
     use HasFactory;
 
-    protected $fillable = ['DesignationLabo', 'ville'];
+    protected $primaryKey = 'NumLabo';
+    
+    protected $fillable = [
+        'DesignationLabo',
+        'ville'
+    ];
 
-    // Relation avec les parfums : un laboratoire peut avoir plusieurs parfums
     public function parfums()
     {
-        return $this->hasMany(Parfum::class, 'laboratoire_id');
+        return $this->hasMany(Parfum::class, 'NumLabo');
     }
 }

@@ -3,6 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Laboratoire;
+use App\Models\Parfum;
+use App\Models\Produit;
+use App\Models\Composition;
+use Database\Seeders\LaboratoireSeeder;
+use Database\Seeders\ProduitSeeder;
+use Database\Seeders\ParfumSeeder;
+use Database\Seeders\CompositionSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,12 +21,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $this->call([
             LaboratoireSeeder::class,
-            ParfumSeeder::class,
             ProduitSeeder::class,
+            ParfumSeeder::class,
             CompositionSeeder::class,
         ]);
     }
